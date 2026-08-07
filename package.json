@@ -1,0 +1,21 @@
+{
+  "name": "uxlens-ai",
+  "private": true,
+  "version": "1.0.0",
+  "description": "UXLens AI — AI-powered website UX reviewer. Submit a URL, get a structured UX report.",
+  "type": "commonjs",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,magenta \"npm run dev --workspace server\" \"npm run dev --workspace client\"",
+    "dev:server": "npm run dev --workspace server",
+    "dev:client": "npm run dev --workspace client",
+    "build": "npm run build --workspace client",
+    "start": "npm run start --workspace server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
