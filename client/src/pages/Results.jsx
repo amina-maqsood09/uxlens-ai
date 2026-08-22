@@ -4,6 +4,7 @@ import { useAnalysis, ANALYSIS_STATUS } from '../context/AnalysisContext';
 import LoadingState from '../components/LoadingState';
 import ReportDashboard from '../components/ReportDashboard';
 import UrlInputForm from '../components/UrlInputForm';
+import ChatPanel from '../components/ChatPanel';
 
 /**
  * Results page — renders whatever state the analysis is in:
@@ -63,9 +64,12 @@ export default function Results() {
           </Link>
         </div>
         <ReportDashboard report={result} />
+        <ChatPanel report={result} />
       </section>
     );
   }
 
   return null;
 }
+
+

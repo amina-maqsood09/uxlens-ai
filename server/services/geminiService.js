@@ -94,7 +94,7 @@ async function analyzeScreenshot(capture) {
       ],
       generationConfig: {
         temperature: 0.2,
-        maxOutputTokens: 2048,
+        maxOutputTokens: 8192,
         responseMimeType: 'application/json',
       },
     });
@@ -117,10 +117,22 @@ async function analyzeScreenshot(capture) {
  * failure so the client always gets a clear message.
  */
 function parseAnalysis(rawText) {
+  const trimmed = rawText.trim();
+
+  // Some models (especially "thinking" models) can prepend a stray sentence
+  // before the JSON even when responseMimeType is set to json — so beyond
+  // the clean/fenced attempts, we also try the substring between the first
+  // "{" and the last "}", which recovers the JSON regardless of what's
+  // wrapped around it.
+  const firstBrace = trimmed.indexOf('{');
+  const lastBrace = trimmed.lastIndexOf('}');
+  const braceSlice = firstBrace !== -1 && lastBrace > firstBrace ? trimmed.slice(firstBrace, lastBrace + 1) : null;
+
   const candidates = [
-    rawText.trim(),
+    trimmed,
     ...Array.from(rawText.matchAll(/```(?:json)?\s*([\s\S]*?)\s*```/g), (m) => m[1].trim()),
-  ];
+    braceSlice,
+  ].filter(Boolean);
 
   let parsed = null;
   for (const candidate of candidates) {

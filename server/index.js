@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const env = require('./config/env');
 const analyzeRouter = require('./routes/analyze');
+const chatRouter = require('./routes/chat');
 const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -24,6 +25,7 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true, mockMode: env.USE_MOCK, model: env.GEMINI_MODEL, uptime: process.uptime() });
 });
 app.use('/api', analyzeRouter);
+app.use('/api', chatRouter);
 
 // In production, serve the built React app from the same port.
 const clientDist = path.resolve(__dirname, '../client/dist');
